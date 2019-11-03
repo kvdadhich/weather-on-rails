@@ -1,0 +1,16 @@
+<div class="container">
+  <div class="text-center">
+    <div class="card" id="current_temp">
+      <%=render "current_weather_detail"%>
+    </div>
+    <br>
+    <div class="card">
+      <ul class="list-group list-group-flush">
+        <%@weather_forcats.each do |wf|%>
+          <li class="list-group-item"><%=wf[:avg_temp].to_i%>° <%=wf[:day]%> </li>
+        <%end%>
+      </ul>
+    </div>
+
+  </div>
+</div>

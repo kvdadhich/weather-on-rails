@@ -1,0 +1,53 @@
+<div class="loader"></div>
+<div id="main_section"></div>
+<script>
+  var lat = '';
+  var long = '';
+  $( document ).ready(function() {
+    get_user_location()
+    console.log("lat & long", lat, long)
+  });
+
+  var get_user_location = function(){
+    if ("geolocation" in navigator){ //check geolocation available 
+      navigator.geolocation.getCurrentPosition(function(position){ 
+        lat = position.coords.latitude
+        long = position.coords.longitude
+        get_weather_detail()
+        console.log("Browser doesn't support geolocation!", position.coords.latitude ,position.coords.longitude);
+      });
+    }else{
+      console.log("Browser doesn't support geolocation!");
+    }
+  }
+
+  var get_weather_detail = function(){
+    $.ajax({
+      url: '/get_temp',
+      type: 'GET',
+      dataType : 'script',
+      data: {lat: lat, long: long},
+      success: function( data, textStatus, jQxhr ){
+        $("#main_section").html(JSON.parse(data)["content"])
+        $(".loader").hide();
+      }
+    });
+  }
+
+  var get_current_temp = function(){
+    $.ajax({
+      url: '/get_current_temp',
+      type: 'GET',
+      dataType : 'script',
+      data: {lat: lat, long: long},
+      success: function( data, textStatus, jQxhr ){
+        $("#current_temp").html(JSON.parse(data)["content"])
+        $(".loader").hide();
+      }
+    });
+  }
+  setInterval(function(){
+    $(".loader").show();
+    get_current_temp();
+  }, 600000);
+</script>
